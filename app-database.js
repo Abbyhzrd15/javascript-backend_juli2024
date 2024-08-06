@@ -1,2 +1,31 @@
 const http = require('http') //sudah ada modul bawaan dari node.js
-require('mysql2') // module dari node_modules
+const mysql = require('mysql2') // module dari node_modules
+
+//konfigurasi database mysql yg ingin di gunakan
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database:'jfd_belajar_database',
+})
+
+//menyambungkan atau membuka koneksi
+db.connect()
+
+//ambil data dari mysql
+db.query("SELECT * FROM karyawan", function(error, hasil){
+    if (error) {
+        console.log(error);
+    } else {
+        console.log(hasil)
+        console.log('============')
+        console.log(hasil[1].nama)
+        console.log('=============')
+        for(let i=0; i < hasil.length; i++) {
+            console.log(hasil[i].nama)
+        }
+
+    }
+})
+
+db.end()
