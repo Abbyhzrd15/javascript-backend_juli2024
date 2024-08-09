@@ -7,7 +7,7 @@ app.get('/', function (req, res) {
 })
 //route -> rute
 app.get('/hubungi', function (req, res) {
-  res.send('<h1>Silakan Wa: 081273257899</h1>')
+  res.send('<h1>Silakan Chat Wa: 081273257899</h1>')
 })
 
 app.listen(port, () => {
