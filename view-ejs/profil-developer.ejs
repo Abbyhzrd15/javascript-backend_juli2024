@@ -1,0 +1,32 @@
+<h1>Profil Developer</h1>
+<hr>
+Nama          : Irfan Saputra <br>
+alamat        : Lampung Barat <br>
+Role          : <%= jabatan %> <br>
+Jenis Kelamin : <%= gender %> <br>
+gaji pokok    : Rp <%= gaji.toLocaleString('id-ID') %> <br>
+
+<!-- cara penulisan pertama logic backend di ejs -->
+<!-- buka tutup tag ejs setiap baris sampai logic selsai -->
+<!-- htmlnya bisa auto ketik, karena htmlnya free akan tampil sesuai blok logic -->
+<% if (gaji > 5000000) { %>
+    status: <b>kena pajak penghasilan 2.5%</b>
+    <% } else { %>
+        Status: <b>Tidak perlu bayar pajak</b>
+        <% }  %>
+
+<hr>
+<!-- cara penulisan kedua logic backend di ejs -->
+<!-- buka tutup tag ejs hanya sekali -->
+<!-- htmlnya tidak bisa auto ketik, karea htmlnya di eksekusi di dalam function appaend sebagai string -->
+<%
+    if (gaji > 5000000) {
+        __append('Status: <b>Kena Pajak Penghasilan 2.5%</b>')
+    } else {
+        __append('Status: <b>Tidak perlu bayar pajak</b>')
+    }
+%>
+<hr><hr>
+<a href="/hubungi">
+    <button>hubungi saya</button>
+</a>
