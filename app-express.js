@@ -132,10 +132,10 @@ app.get('/karyawan/tambah', function (req,res) {
 
 app.post('/karyawan/proses-insert', async function (req,res) {
   //terima kiriman data dari form html
-  let body = req.body
+  // let body = req.body
 
   try {
-    let insert = await insert_karyawan(body)
+    let insert = await insert_karyawan(req)
     if (insert.affectedRows > 0) {
       res.redirect('/karyawan')
     }
@@ -144,15 +144,18 @@ app.post('/karyawan/proses-insert', async function (req,res) {
   }
 })
 
-function insert_karyawan(body) {
-  let sql = 
-`INSERT INTO karyawan
-(nama, gender, alamat, nip)
-VALUES
-('${body.form_nama_lengkap}', '${body.form_gender}', '${body.form_alamat}', '${body.form_nip}')`;
+function insert_karyawan(req) {
+  let data = {
+    nama    : req.body.form_nama_lengkap,
+    gender  : req.body.form_gender,
+    alamat  : req.body.form_alamat,
+    nip     : req.body.form_nip,
+  }
+  
+  let sql = `INSERT INTO karyawan SET ?`;
   
   return new Promise ( (resolve, reject)=> {
-    db.query(sql, [], function(errorSql, hasil) {
+    db.query(sql, [data], function(errorSql, hasil) {
        if (errorSql) {
          reject(errorSql)
        } else {
