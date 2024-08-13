@@ -12,8 +12,11 @@ const db        = mysql.createConnection({
 
 db.connect()
 
+// untuk mengambil data yg terencode(enkripsi) dari form html
+// yg dikirim melalui protokol http
+app.use( express.urlencoded({extended:false}) )
 app.set('view engine', 'ejs') //setting penggunaan template engine untuk express
-app.set('views', './view-ejs')
+app.set('views', './view-ejs') // setting penggunaan folder untuk menyimpan file .ejs
 
 app.get('/', function (req, res) {
   res.send('<h1>Hello World!</h1>')
@@ -72,8 +75,84 @@ app.get('/karyawan/detail/:id_karyawan', async function (req,res) {
 })
 
 function get_satuKaryawan(idk){
+  let sql = 
+  `SELECT 
+    karyawan.*,
+    departemen.kode, departemen.nama AS nama_dept,
+    agama.nama AS nama_agama
+  FROM karyawan
+  LEFT JOIN departemen  ON departemen.id = karyawan.departemen_id
+  LEFT JOIN agama       ON agama.id = karyawan.agama_id
+  WHERE karyawan.id = ?`;
   return new Promise ( (resolve, reject)=> {
-    db.query("SELECT * FROM karyawan WHERE id = ?", [idk], function(errorSql, hasil) {
+    db.query(sql, [idk], function(errorSql, hasil) {
+       if (errorSql) {
+         reject(errorSql)
+       } else {
+         resolve(hasil)  
+       }
+   })
+ }) 
+}
+
+app.get('/karyawan/hapus/:id_karyawan', async function (req,res) {
+  //ambil id yg dikirim via url 
+  let idk = req.params.id_karyawan
+
+  //proses hapus data
+  try {
+    let hapus = await hapus_satuKaryawan(idk)
+    if (hapus.affectedRows > 0) {
+      res.redirect('/karyawan')
+    }
+  } catch (error) {
+    throw error
+  }
+})
+
+function hapus_satuKaryawan(idk) {
+  let sql = 
+  `DELETE FROM karyawan
+  WHERE id = ?`;
+  
+  return new Promise ( (resolve, reject)=> {
+    db.query(sql, [idk], function(errorSql, hasil) {
+       if (errorSql) {
+         reject(errorSql)
+       } else {
+         resolve(hasil)  
+       }
+   })
+ }) 
+}
+
+app.get('/karyawan/tambah', function (req,res) {
+  res.render('karyawan/form-tambah')
+})
+
+app.post('/karyawan/proses-insert', async function (req,res) {
+  //terima kiriman data dari form html
+  let body = req.body
+
+  try {
+    let insert = await insert_karyawan(body)
+    if (insert.affectedRows > 0) {
+      res.redirect('/karyawan')
+    }
+  } catch (error) {
+    throw error
+  }
+})
+
+function insert_karyawan(body) {
+  let sql = 
+`INSERT INTO karyawan
+(nama, gender, alamat, nip)
+VALUES
+('${body.form_nama_lengkap}', '${body.form_gender}', '${body.form_alamat}', '${body.form_nip}')`;
+  
+  return new Promise ( (resolve, reject)=> {
+    db.query(sql, [], function(errorSql, hasil) {
        if (errorSql) {
          reject(errorSql)
        } else {

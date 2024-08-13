@@ -6,13 +6,19 @@
 
 <h1> Data Seluruh Karyawan PT Konoha Makmur</h1>
 <hr>
+
+<a href="/karyawan/tambah">
+    <button style="margin-bottom: 5px; background-color: lightskyblue;">
+        Tambah
+    </button>
+</a>
 <table border="1">
     <thead>
         <tr>
             <th class="padding-td">Nama</th>
             <th class="padding-td">Gender</th>
             <th class="padding-td">NIP</th>
-            <th class="padding-td">Pilihan</th>
+            <th class="padding-td" colspan="2">Pilihan</th>
         </tr>
     </thead>
     <tbody>
@@ -26,9 +32,12 @@
                    <button>lihat detail</button> 
                 </a>
             </td>
+            <td>
+                <a href="/karyawan/hapus/<%= karyawan[i].id %>" onclick="return confirm('Yakin mau hapus <%= karyawan[i].nama %> ??')">
+                    <button style="background-color: red; color: white;">hapus</button> 
+                 </a>
+            </td>
         </tr>
         <% } %>
     </tbody>
 </table>
-<!-- buat menampilkan semua data karyawan -->
-<!-- <%= JSON.stringify(karyawan) %> -->
