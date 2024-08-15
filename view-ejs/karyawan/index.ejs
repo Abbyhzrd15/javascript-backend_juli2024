@@ -18,7 +18,7 @@
             <th class="padding-td">Nama</th>
             <th class="padding-td">Gender</th>
             <th class="padding-td">NIP</th>
-            <th class="padding-td" colspan="2">Pilihan</th>
+            <th class="padding-td" colspan="3">Pilihan</th>
         </tr>
     </thead>
     <tbody>
@@ -32,8 +32,14 @@
                    <button>lihat detail</button> 
                 </a>
             </td>
-            <td>
-                <a href="/karyawan/hapus/<%= karyawan[i].id %>" onclick="return confirm('Yakin mau hapus <%= karyawan[i].nama %> ??')">
+            <td class="padding-td">
+                <a href="/karyawan/edit/<%= karyawan[i].id %>">
+                    <button style="background-color: yellow; color: black;">Edit</button> 
+                 </a>
+            </td>
+            <td class="padding-td">
+                <a href="/karyawan/hapus/<%= karyawan[i].id %>" 
+                    onclick="return confirm('Yakin mau hapus <%= karyawan[i].nama %> ??')">
                     <button style="background-color: red; color: white;">hapus</button> 
                  </a>
             </td>
