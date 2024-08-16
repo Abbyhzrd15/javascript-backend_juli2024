@@ -7,6 +7,12 @@
 <h1> Data Seluruh Karyawan PT Konoha Makmur</h1>
 <hr>
 
+<% if (message) { %>
+    <div style="background-color: lightgreen; text-transform: 2px;">
+        <b><%= message %></b>
+    </div>
+<% } %>    
+
 <a href="/karyawan/tambah">
     <button style="margin-bottom: 5px; background-color: lightskyblue;">
         Tambah

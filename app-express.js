@@ -58,7 +58,8 @@ function get_semuaKaryawan () {
   //menunggu script yg di panggil sampai selsai di eksekusi
 app.get('/karyawan', async function (req,res) {  
     let dataview = {
-      karyawan: await get_semuaKaryawan()
+      karyawan: await get_semuaKaryawan(),
+      message: req.query.msg,
   }
   res.render('karyawan/index', dataview)
 })
@@ -103,7 +104,7 @@ app.get('/karyawan/hapus/:id_karyawan', async function (req,res) {
   try {
     let hapus = await hapus_satuKaryawan(idk)
     if (hapus.affectedRows > 0) {
-      res.redirect('/karyawan')
+      res.redirect(`/karyawan?msg=berhasil hapus karyawan`)
     }
   } catch (error) {
     throw error
@@ -168,7 +169,7 @@ app.post('/karyawan/proses-insert', async function (req,res) {
   try {
     let insert = await insert_karyawan(req)
     if (insert.affectedRows > 0) {
-      res.redirect('/karyawan')
+      res.redirect(`/karyawan?msg=berhasil tambah karyawan a/n ${req.body.form_nama_lengkap}`)
     }
   } catch (error) {
     throw error
@@ -207,6 +208,41 @@ app.get('/karyawan/edit/:id_karyawan', async function (req,res) {
   }
   res.render('karyawan/form-edit', dataview)
 })
+
+app.post('/karyawan/proses-update/:id_karyawan' , async function (req, res) {
+  let idk = req.params.id_karyawan
+  try {
+    let update = await update_karyawan(req, idk)
+    if (update.affectedRows > 0) {
+      res.redirect(`/karyawan?msg=berhasil edit karyawan a/n ${req.body.form_nama_lengkap}`)
+    }
+  } catch (error) {
+    throw error
+  }
+})
+
+function update_karyawan(req, idk) {
+  let data = {
+    nama          : req.body.form_nama_lengkap,
+    gender        : req.body.form_gender,
+    alamat        : req.body.form_alamat,
+    nip           : req.body.form_nip,
+    departemen_id : req.body.form_departemen,
+    agama_id      : req.body.form_agama,
+  }
+  let sql = `UPDATE karyawan SET ? WHERE id = ?`;
+  
+  return new Promise ( (resolve, reject)=> {
+    db.query(sql, [data, idk], function(errorSql, hasil) {
+       if (errorSql) {
+         reject(errorSql)
+       } else {
+         resolve(hasil)  
+       }
+   })
+ }) 
+}
+
 
 
 app.listen(port, function () {
